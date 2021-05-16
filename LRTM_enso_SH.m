@@ -37,6 +37,7 @@ klgnd=1;
 lgt = 41;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% T E S T %%%%%%%%
 ien = input ('Response to - (1) El Nino precipitation anom & (2) La Nina precipitation anom :: ');
 if ien == 1
     trm = 'ElNino';
