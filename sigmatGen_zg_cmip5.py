@@ -57,38 +57,39 @@ from datetime import datetime
 
 # loading CMIP anom data 
 
-cmippth = '/media/pranab/STORAGE5/LRTM-SH-PD-ProcessedData'
+cmippth = r"/media/pranab/Backup Plus/Backup_12_05_2021/LRTM-SH-PD-ProcessedData"
 
 # CCSM4
 #flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_CCSM4_amip_19800101_20051231.npz'; modl = 'CCSM4_amip'; dy = 365.0; print ('Model chosen :: CCSM4')
 
 #HadGEM2A
-#flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_HadGEM2A_amip_19800101_20051230.npz'; modl = 'HadGEM2A_amip'; dy = 360.0; print ('Model chosen :: HadGEM2A') 
+# flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_HadGEM2A_amip_19800101_20051230.npz'; modl = 'HadGEM2A_amip'; dy = 360.0; print ('Model chosen :: HadGEM2A') 
 
 #MIROC5
-#flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_MIROC5_amip_19800101_20051231.npz'; modl = 'MIROC5_amip'; dy = 365.0; print ('Model chosen :: MIROC5')
+# flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_MIROC5_amip_19800101_20051231.npz'; modl = 'MIROC5_amip'; dy = 365.0; print ('Model chosen :: MIROC5')
 
 #IPSLcm5aMR
-#flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_IPSLcm5aMR_amip_19800101_20051231.npz'; modl = 'IPSLcm5aMR_amip'; dy = 365.0; print ('Model chosen :: IPSLcm5aMR')
+# flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_IPSLcm5aMR_amip_19800101_20051231.npz'; modl = 'IPSLcm5aMR_amip'; dy = 365.0; print ('Model chosen :: IPSLcm5aMR')
 
 # NorESM1
-#flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_NorESM1_amip_19800101_20051231.npz'; modl = 'NorESM1_amip'; dy = 365.0; print ('Model chosen :: NorESM1')
+# flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_NorESM1_amip_19800101_20051231.npz'; modl = 'NorESM1_amip'; dy = 365.0; print ('Model chosen :: NorESM1')
 
 # GFDL-CM3-amip: USES GREGORIAN CALENDAR
-#flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_GFDLCM3_amip_19800101_20051231.npz'; modl = 'GFDLCM3_amip'; dy = 365.0; print ('Model chosen :: GFDL-CM3');
+# flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_GFDLCM3_amip_19800101_20051231.npz'; modl = 'GFDLCM3_amip'; dy = 365.0; print ('Model chosen :: GFDL-CM3');
 
 # MPI-ESM-MR-amip: USES GREGORIAN CALENDAR
-#flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_MPIesmMR_amip_19800101_20051231.npz'; modl = 'MPIesmMR_amip'; dy = 365.0; print ('Model chosen :: MPI-ESM-MR');
+# flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_MPIesmMR_amip_19800101_20051231.npz'; modl = 'MPIesmMR_amip'; dy = 365.0; print ('Model chosen :: MPI-ESM-MR');
 
 # ACCESS1-3-amip: USES GREGORIAN CALENDAR
-#flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_ACCESS1-3_amip_19800101_20051231.npz'; modl = 'ACCESS1-3_amip'; dy = 365.0; print ('Model chosen :: ACCESS1-3');
+# flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_ACCESS1-3_amip_19800101_20051231.npz'; modl = 'ACCESS1-3_amip'; dy = 365.0; print ('Model chosen :: ACCESS1-3');
 
 # MRI-CGCM3-amip: USES GREGORIAN CALENDAR
-#flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_MRI-CGCM3_amip_19800101_20051231.npz'; modl = 'MRI-CGCM3_amip'; dy = 365.0; print ('Model chosen :: MRI-CGCM3');
+# flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_MRI-CGCM3_amip_19800101_20051231.npz'; modl = 'MRI-CGCM3_amip'; dy = 365.0; print ('Model chosen :: MRI-CGCM3');
 
 
 # NorESM1-amip: USES GREGORIAN CALENDAR
 flpr = cmippth + "/" + 'zg250_ano_daily_detrend_NoFilt_SH_NorESM1_amip_19800101_20051231.npz'; modl = 'NorESM1_amip'; dy = 365.0; print ('Model chosen :: NorESM1');
+
 
 
 prfile = np.load(flpr)
@@ -107,8 +108,9 @@ yln = range(yr1,yr2)
 yrind = 0
 tsp = 90
 
+
 pam = np.zeros((1,nzg,ozg))+99999.99
-for iy in range(len(yln)-1): 
+for iy in range(len(yln)): 
     yr = yln[iy]
     print ('years',yr, '-',str(yr+1))
     
@@ -148,12 +150,12 @@ sig_mat = pam[1:,:,:] # this removes the first dummy row
 
 print ('shape of sig_mat: ', np.shape(sig_mat))
 
-#import sys
-#sys.exit()
+# import sys
+# sys.exit()
 
 floutM = ('sig_mat_DJF_'+str(yr1)+'_'+str(yr2-1)+'_'+modl+'.mat')
 print (floutM)
 
-
+#
 #np.savez(floutPzg, sig_mat=zg_sigmat, lon=lonz, lat=latz)
 sio.savemat(floutM, {'sig_mat':sig_mat, 'lon':lon, 'lat':lat})

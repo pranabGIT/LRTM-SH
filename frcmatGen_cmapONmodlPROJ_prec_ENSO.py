@@ -53,13 +53,10 @@ from datetime import datetime
 
 # loading CMIP anom data 
 
-#cmippth = '/media/pranab/STORAGE5/LRTM-SH-PD-ProcessedData'
-#cmippth = '/media/pranab/Backup Plus'
-cmippth = '/media/pranab/Backup Plus/Backup_12_05_2021/LRTM-SH-PD-ProcessedData'
-
+cmippth = "/media/pranab/Backup Plus/Backup_12_05_2021/LRTM-SH-PD-ProcessedData"
 
 # CCSM4
-flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_CCSM4_amip_19800101_20051231.npz'; modl = 'CCSM4_amip'; dy = 365.0; print ('Model chosen :: CCSM4')
+# flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_CCSM4_amip_19800101_20051231.npz'; modl = 'CCSM4_amip'; dy = 365.0; print ('Model chosen :: CCSM4')
 
 #HadGEM2A
 # flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_HadGEM2A_amip_19800101_20051230.npz'; modl = 'HadGEM2A_amip'; dy = 360.0; print ('Model chosen :: HadGEM2A') 
@@ -85,7 +82,7 @@ flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_CCSM4_amip_19800101_20051
 # flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_MRI-CGCM3_amip_19800101_20051231.npz'; modl = 'MRI-CGCM3_amip'; dy = 365.0; print ('Model chosen :: MRI-CGCM3')
 
 #NorESM1
-# flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_NorESM1_amip_19800101_20051231.npz'; modl = 'NorESM1_amip'; dy = 365.0; print ('Model chosen :: NorESM1')
+flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_NorESM1_amip_19800101_20051231.npz'; modl = 'NorESM1_amip'; dy = 365.0; print ('Model chosen :: NorESM1')
 
 prfile = np.load(flpr)
 
@@ -93,81 +90,32 @@ prtr = prfile['prano']
 lon = prfile['lon']
 lat = prfile['lat']
 [lnx, lty] = np.meshgrid(lon, lat)
-tm2 = np.linspace(1,len(prtr),len(prtr))
-[m,n,o] = np.shape(prtr)
 
+#######################################################
+# loads the composite prec ano for ENSO extreme years #
 
+ifl = input('1 for ElNino & 2 for LaNina :::')
+ifl = float(ifl)
 
-######### FIND THE COMPOSITE ENSO PREC #########
-# Steps:
-#1 finds the DJF prec for all years: 1998-2017 #
-
-yr1 = 1980
-yr2 = 2005 
-yln = range(yr1, yr2)
-yln = np.array(yln)
-
-yrind = 0
-
-pryr = np.zeros((len(yln), n, o))
-
-for iy in range(len(yln)): 
-    yr = yln[iy]
-
-    print ('year :: ', yr)
-        # FOR models with dy = 365
-    if dy == 365.0:
-        indst, indend = yrind+334, yrind+334+90
-        yrtot = 365
-
-    # FOR models with dy = 360
-    if dy == 360.0:
-        indst, indend = yrind+11*30, yrind+11*30+90 # 9*30=270 for until end of Sepember, 20 for October, so that it starts from 21 Oct ~ this gives us a lag of 40 days before DJF
-        yrtot = 360
+if ifl == 2:
+    flc = 'CMAP_LaNina_compAnom.npz'; flo = 'LaNina' #
+if ifl == 1:
+    flc = 'CMAP_ElNino_compAnom.npz'; flo = 'ElNino'
         
-        
-        
-    # extract the djf (i.e., 90 days) daily data for #iy year
-    pr = prtr[indst:indend,:,:]
-    prav = np.nanmean(pr,0)
-    #pdat = np.vstack((pdat,prav))
+flEN = np.load(flc)
+prEN = flEN['prc_cc']
+lonc = flEN['lonc']
+latc = flEN['latc']
 
-    tm3 = tm2[indst:indend]
-    print ('time limits', tm3[0], tm3[-1])
-    #print ('length of prec. DJF i.e. 90 days', len(pr))
- 
-    pryr[iy,:,:] = prav
-    yrind = yrind + yrtot
-    
-    
-    
-##### extracts the composite prec for ENSO extreme years #####
+y,x=np.meshgrid(latc,lonc)
 
-# selected extreme years
-    
-# El Nino years
-yr1 = [1982, 1987, 1991, 1997, 2002]; flo = 'ElNino'; # list for CMAP period
-    
-# La Nina events
-# yr1 = [1988, 1995, 1998, 1999, 2000]; flo = 'LaNina'; # list for CMAP period
+# flattened lon/lat for regridding
+points = np.array((x.flatten(),y.flatten())).T
 
-pdat = np.zeros((1, n, o))+99999.99
+#prtr = griddata(points, prano, (lnx,lty))
 
-for iyr in range(len(yr1)):
-    
-    pp = np.where (yln == yr1[iyr])
-    pp = pp[0]
-    prc10 = pryr [pp, :, :]
-    pdat = np.concatenate((pdat, prc10), axis=0)
-    
-    del prc10
-    del pp
-
-
-prc_cc = np.nanmean(pdat [1:,:,:], 0)
-
-
-
+#prc_cc=scipy.interpolate.griddata((x.flatten(),y.flatten()), prEN.flatten(), (lnx,lty),method='cubic')
+prc_cc = scipy.interpolate.griddata(points, prEN.flatten() , (lnx,lty), method='cubic')
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -219,7 +167,6 @@ for ipl in range(3):
                 ax1 = fig.add_subplot(311)
                 pr = prc_cc
                 plt.title(modl)
-
         if ipl == 1:
                 ax1 = fig.add_subplot(312)
                 pr = prtr75
@@ -245,16 +192,13 @@ for ipl in range(3):
         m.drawmeridians(meridians,labels=[1,1,1,1],fontsize=7)
         m.drawcoastlines(color = 'gray', linewidth=0.5)
 
-
-figname = 'pfccVdaily_modlONmodl_'+modl[0:4]+'.png'
+figname = 'pfccVdaily_cmapONmodl'+modl[0:4]+'.png'
 
 plt.savefig(figname, dpi=400)
 
 
-    
-#import sys
-#sys.exit()
-
+import sys
+sys.exit()
 
 ##################################################################
 
@@ -276,9 +220,7 @@ tsp = 90
 
 yrind = 0
 pam = np.zeros((ilag+1))+99999.99
-
 for iy in range(len(yln)): 
-  
     yr = yln[iy]
     print ('years',yr, '-',str(yr+1))
     
@@ -321,13 +263,11 @@ frc_mat = pam[1:,:] # this removes the first dummy row
 
 print ('shape of frc_mat: ', np.shape(frc_mat))
 
-floutM = ('Proj_modl'+flo+'_frc_mat_lag'+str(ilag)+'_DJF_'+str(yr1)+'_'+str(yr2-1)+'_'+modl+'.mat')
+floutM = ('Proj_cmap'+flo+'_frc_mat_lag'+str(ilag)+'_DJF_'+str(yr1)+'_'+str(yr2-1)+'_'+modl+'.mat')
 
 
 #print floutP
 print (floutM)
-
-
 #np.savez(floutP, frc_mat=frc_mat)
 sio.savemat(floutM, {'frc_mat':frc_mat})
 

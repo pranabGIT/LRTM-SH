@@ -67,7 +67,7 @@ lon = ncz.variables['LONN71_72']
 lat = ncz.variables['LAT']
 
 
-# flpr = cmappth + "\\" + 'cmap_dailyanom_01011979_17122016_tropics.mat'
+# flpr = cmappth + "/" + 'cmap_dailyanom_01011979_17122016_tropics.mat'
 
 # prec = sio.loadmat(flpr)
 # lat = prec["lat"]
@@ -204,6 +204,8 @@ figname = 'pfccVdaily_ensoONcmap.png'
 # plt.savefig(figname, dpi=400)
 
 
+import sys
+sys.exit()
 ##################################################################
 # Extracting data for DJF+40 days lag
 pfcc=scipy.signal.detrend(pfcc, axis=0)
@@ -259,6 +261,3 @@ floutM = ('Proj_cmapElNinoONcmap_frc_mat_lag'+str(ilag)+'_DJF_'+str(yr1)+'_'+str
 print (floutM)
 #np.savez(floutP, frc_mat=frc_mat)
 sio.savemat(floutM, {'frc_mat':frc_mat})
-
-import sys
-sys.exit()

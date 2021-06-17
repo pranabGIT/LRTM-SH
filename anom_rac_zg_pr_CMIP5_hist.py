@@ -67,22 +67,23 @@ yr1 = 1980; yr2 = 2005;
 # FOLLOWING MODELS ARE FINE
 
 # CCSM4
-#modnm = r"I:\cmip5-daily\CCSM4-amip-hist-daily"; modl = 'CCSM4_amip'; dy = 365.0; yrst = 1979.0; prc = 'pr'; time_offset = 0; print ('Model chosen :: CCSM4'); g = o;
+modnm = "/media/pranab/Backup Plus/Backup_12_05_2021/cmip5-daily/CCSM4-amip-hist-daily"; modl = 'CCSM4_amip'; dy = 365.0; yrst = 1979.0; prc = 'prc'; time_offset = 0; print ('Model chosen :: CCSM4'); g = 0;
 
 # MIROC5
-#modnm = r"I:\cmip5-daily\MIROC5-amip-hist-daily"; modl = 'MIROC5_amip'; dy = 365.0; yrst = 1979.0; prc = 'pr'; time_offset = 0; print ('Model chosen :: MIROC5'); g = 0;
+#modnm = "/media/pranab/Backup Plus/Backup_12_05_2021/cmip5-daily/MIROC5-amip-hist-daily"; modl = 'MIROC5_amip'; dy = 365.0; yrst = 1979.0; prc = 'prc'; time_offset = 0; print ('Model chosen :: MIROC5'); g = 0;
 
 
 # HadGEM2-ES :: Since original timeseries starts from 19780901, time_offset of 120 (4*30) is to be subtracted so that the time variable starts from 0.5 (i.e., from 19790101)
-#modnm = r"I:\cmip5-daily\HadGEM2-A-amip-hist-daily"; modl = 'HadGEM2A_amip'; dy = 360.0; yrst = 1979.0; prc = 'pr'; time_offset = 120; print ('Model chosen :: HadGEM2-A'); g = 0;
+#modnm = "/media/pranab/Backup Plus/Backup_12_05_2021/cmip5-daily/HadGEM2-A-amip-hist-daily"; modl = 'HadGEM2A_amip'; dy = 360.0; yrst = 1979.0; prc = 'prc'; time_offset = 120; print ('Model chosen :: HadGEM2-A'); g = 0;
 
 
 # IPSL-CM5A-MR
-#modnm = r"I:\cmip5-daily\IPSL-CM5A-MR-amip-hist-daily"; modl = 'IPSLcm5aMR_amip'; dy = 365.0; yrst = 1950.0; prc = 'pr'; time_offset = 0; print ('Model chosen :: IPSLcm5aMR'); g = 0;
+
+#modnm = "/media/pranab/Backup Plus/Backup_12_05_2021/cmip5-daily/IPSL-CM5A-MR-amip-hist-daily"; modl = 'IPSLcm5aMR_amip'; dy = 365.0; yrst = 1950.0; prc = 'prc'; time_offset = 0; print ('Model chosen :: IPSLcm5aMR'); g = 0;
 
 
 # NorESM1
-#modnm = '/media/pranab/STORAGE5/cmip5-daily/NorESM1-M-amip-hist-daily'; modl = 'NorESM1_amip'; dy = 365.0; yrst = 1979.0; prc = 'pr'; time_offset = 0; print ('Model chosen :: NorESM1'); g = 0;
+#modnm = '/media/pranab/Backup Plus/Backup_12_05_2021/cmip5-daily/NorESM1-M-amip-hist-daily'; modl = 'NorESM1_amip'; dy = 365.0; yrst = 1979.0; prc = 'pr'; time_offset = 0; print ('Model chosen :: NorESM1'); g = 0;
 
 
 # Gregorian
@@ -135,11 +136,6 @@ os.chdir(cpathp)
 
 print ('###### list prec files #######')
 
-#flp = []
-#for file in glob.glob("*.nc"):
-#    flp.append(file)
-#    print(file)
-
 flp = sorted(os.listdir(cpathp))
 
 os.chdir('/home/pranab/Documents/LRTM-SH-PD')
@@ -161,7 +157,6 @@ if tmp == tmz:
     print ('both zg and pr start from same timestep')
 else:
     print ('zg and pr start from different time step:: S T R A N G E ! ! ! ! !')
-
 
 tmp = tmp - time_offset;
 tmz = tmz - time_offset;
@@ -374,9 +369,6 @@ if g == 1:
     print ('size of extracted zg file after removing 29 febs: ', np.shape(zg))        
 
 
-import sys 
-sys.exit()
-
 ##################### SEGMENT - 3 ####################
 ##### finding anomaly/climatology from the extracted datasets
 ######################################################
@@ -413,9 +405,6 @@ print ('shape of daily zg annual cycle:: ', np.shape(zg_clim))
 print ('max value of zg clim: ', np.nanmax(zg_clim[:]))
 print ('shape of daily pr annual cycle:: ', np.shape(pr_clim))
 print ('max value of pr clim: ', np.nanmax(pr_clim[:]))
-
-
-
 
 # * * * * * * * * * * * * * * * * *
 # WITH FFT SMOOTHING!!
@@ -464,6 +453,14 @@ del zg; del zg_smooth
 print ('shape of daily anomaly var - for all 365/360 days x 20 yearsi:: ', np.shape(zgano1))
 
 
+
+
+# import sys 
+# sys.exit()
+
+
+
+
 # removing linear trend from anomaly data
 #zgano=scipy.signal.detrend(zgano1, axis=0)
 #print 'shape of detrended anomaly var - for all 360 days x 30 years'
@@ -503,7 +500,7 @@ print ('shape of daily anomaly var - for all 365/360 days x 20 yearsi:: ', np.sh
 flano = ('pr_ano_daily_detrend_NoFilt_NH_'+modl+'_'+fyr+'.npz')
 print (' raw/unfiltered anomaly data saved in::: ', flano)
 np.savez(flano, prano=prano1, time=time, lon=lonp, lat=latp)
-del prano1
+# del prano1
 
 
 
