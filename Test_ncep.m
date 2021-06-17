@@ -21,8 +21,8 @@ end
 
 % calculate NCEP DJF ENSO composite
 
-% ncfile = '/media/pranab/Backup Plus/Backup_12_05_2021/hgt_NCEP_NCAR_1980JAN_2020DEC_monthly.nc'; rst = 'NCEP:1980-2019'; yr = 1980:2019; % Dec - centred == 1980 means DJF/D1980/J81/F81
-ncfile = '/media/pranab/Backup Plus/Backup_12_05_2021/hgt_NCEP_NCAR_1980JAN_2005DEC_monthly.nc'; rst = 'NCEP:1980-2005'; yr = 1980:2005;
+% ncfile = '/media/pranab/Backup Plus/Backup_12_05_2021/NCEP_gh/hgt_NCEP_NCAR_1980JAN_2020DEC_monthly.nc'; rst = 'NCEP:1980-2019'; yr = 1980:2019; % Dec - centred == 1980 means DJF/D1980/J81/F81
+ncfile = '/media/pranab/Backup Plus/Backup_12_05_2021/NCEP_gh/hgt_NCEP_NCAR_1980JAN_2005DEC_monthly.nc'; rst = 'NCEP:1980-2005'; yr = 1980:2005;
 
 hgt = ncread(ncfile,'HGT'); hgt = squeeze(hgt); lon = ncread(ncfile,'LONN71_73'); lat = ncread(ncfile,'LAT');
 lt = find(lat<=0); hgt = hgt(:,lt,:); lat = lat(lt); [m,n,o] = size(hgt);

@@ -4,9 +4,9 @@
 %{
 % The code takes in:
 
-Expt-A
+Expt-C
 
-1. forcing data (DJF + 40 lag days) : : projection of CMAP ENSO prec anom on
+1. forcing data (DJF + 40 lag days) : : projection of model ENSO prec anom on
 daily model prec anomaly
 
 2. sigmal matrix (DJF all grid points over NH) : geopot. height anom @250
@@ -71,7 +71,7 @@ elseif idc == 9
 end
 
 % Forcing data
-fln = ['Proj_cmap',trm,'_frc_mat_lag40_DJF_1980_2004_',modl,'_amip.mat'];
+fln = ['Proj_modl',trm,'_frc_mat_lag40_DJF_1980_2004_',modl,'_amip.mat'];
 load (fln)
 
 % Signal data
@@ -91,7 +91,6 @@ clim1 = -100; clim2 = 100;
 frc_mat = detrend(frc_mat,1); 
 [m,n] = size(frc_mat);
 [ms,ns,os] = size(sig_mat);
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -130,32 +129,15 @@ end
 stpavg = squeeze(nanmean(stp(itm1:itm2,:,:),1)); % given time lag range
 
 % %%%%%%%%%%% Remove the zonal mean to eliminate SAM %%%%%%%%%%%
-% 
-% [mg, ng] = size(stpavg);
-% 
-% for i = 1:ng
-%     stpavgA(:, i) = stpavg (:, i) - nanmean(stpavg(:, i));
+% gzm = stpavg;
+% [ma, na] = size(gzm);
+% for i = 1:na
+%     gzm(:, i) = gzm (:, i) - nanmean(gzm(:, i));
 % end
-% 
-% stpavg = stpavgA;
-
+% stpavg = gzm;
 
 stpsv = ['stp_',modl, '_DJF_1980_2004_ExptA_',trm];
-
-
- %%%%%%%%%%% Remove the zonal mean to eliminate SAM %%%%%%%%%%%
-gzm = stpavg;
-
-[ma, na] = size(gzm);
-
-for i = 1:na
-    gzm(:, i) = gzm (:, i) - nanmean(gzm(:, i));
-end
-
-stpavg = gzm;
-
-
-% save(stpsv, 'stpavg', 'lon', 'lat')
+save(stpsv, 'stpavg', 'lon', 'lat')
 %% Calculate Geostrophic wind
 % eta=stpavg';
 % %
@@ -195,7 +177,6 @@ stpavg = gzm;
 %         
 %     end
 % end
-
 
 %% PLOTS %%%%%%%%%%%%%%%%%%
 figure
@@ -253,4 +234,3 @@ title ([modl,' ',trm])
 %fnm = ['SRF_AVG_30_40_',trm,'_SH_',yrst,'.png'];
 fnm = ['SRF_AVG_30_40_',trm,'_SH_',modl,'_',trm,'.png'];
 % print ('-r300', fnm, '-dpng')
-

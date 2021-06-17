@@ -6,6 +6,7 @@ https://docs.google.com/document/d/1kU337S6c0JNcKNqAqmFwEGcnsaxZ41Rgk9MpLqnXuIs/
 %}
 clc; clear
 addpath /home/pranab/Documents/MATLAB-AUX/m_map/
+addpath /home/pranab/Documents/MATLAB-AUX/ClimateDataToolbox/cdt/
 
 %%%%% YEARS/ El Nino or La Nina??
 ien = input ('Response to - (1) El Nino precipitation anom & (2) La Nina precipitation anom :: ');
@@ -20,8 +21,8 @@ end
 
 % calculate NCEP DJF ENSO composite
 
-% ncfile = '/media/pranab/Backup Plus/Backup_12_05_2021/hgt_NCEP_NCAR_1980JAN_2020DEC_monthly.nc'; rst = 'NCEP:1980-2019'; yr = 1980:2019; % Dec - centred == 1980 means DJF/D1980/J81/F81
-ncfile = '/media/pranab/Backup Plus/Backup_12_05_2021/hgt_NCEP_NCAR_1980JAN_2005DEC_monthly.nc'; rst = 'NCEP:1980-2005'; yr = 1980:2005;
+% ncfile = '/media/pranab/Backup Plus/Backup_12_05_2021/NCEP_gh/hgt_NCEP_NCAR_1980JAN_2020DEC_monthly.nc'; rst = 'NCEP:1980-2019'; yr = 1980:2019; % Dec - centred == 1980 means DJF/D1980/J81/F81
+ncfile = '/media/pranab/Backup Plus/Backup_12_05_2021/NCEP_gh/hgt250_NCEP_NCAR_1980JAN_2005DEC_monthly.nc'; rst = 'NCEP:1980-2005'; yr = 1980:2005;
 
 hgt = ncread(ncfile,'HGT'); hgt = squeeze(hgt); lon = ncread(ncfile,'LONN71_73'); lat = ncread(ncfile,'LAT');
 lt = find(lat<=0); hgt = hgt(:,lt,:); lat = lat(lt); [m,n,o] = size(hgt);
@@ -211,6 +212,7 @@ stp_ens = zeros (m, n);
 ghENSO_ens = zeros (m, n);
 % idc = input ('Which model is it?? 1 for CCSM4 :: 2 for IPSL :: 3 for MIROC5 :: 4 for HadGEM2A :: 5 for GFDLCM3 :: 6 for MPIesmMR :: 7 for MRI-CGCM3 :: 8 for ACCESS1-3 :: 9 for NorESM1 ::');
 k = 0;
+rmod = []; rLRTM = [];
 for idc = 1:9
     % STP AVG COMPOSITE
     if idc == 1
@@ -250,12 +252,21 @@ for idc = 1:9
     stp_ens = stp_ens + a1;
    
     lt = find (latR<=-20);
-    bstp = a1(:,lt);
+    bstp = a1(:,lt);    
+   
+    % %%%%%%%%%% AREA WEIGHTED correlation %%%%%%%%%%%%
+    % % grid area
+    [Xg,Yg] = meshgrid(latR(lt),lonR);
+    A = cdtarea(Xg, Yg, 'km2');
+    % normalization of area weights #1
+    normA = A - min(A(:));
+    normA = normA ./ max(normA(:));
+
     % checking correlation of individual models
-    ['corr for ',modl, ' LRTM v NCEP']
+%     ['corr for ',modl, ' LRTM v NCEP']
     
-    nancorr2(bstp,aera360)
-    
+    r1 = nancorr2(bstp.*normA,aera360.*normA);
+    rLRTM = [rLRTM; r1];
     
 %#####################################################################################################
 %#####################################################################################################
@@ -299,23 +310,56 @@ for idc = 1:9
   
     % for individual model composite vs ERA correlation
     cmod = a1; cmod = cmod(:, lt); 
-    ['corr for ',modl, ' ENSO comp v NCEP']
-    nancorr2(cmod,aera360)
     
+     % %%%%%%%%%% AREA WEIGHTED correlation %%%%%%%%%%%%
+  
+%     ['corr for ',modl, ' ENSO comp v NCEP']
+    r2 = nancorr2(cmod.*normA,aera360.*normA);
+    rmod = [rmod; r2];
     k = k+1;
 end
 
 stp_ens = stp_ens/k;
 ghENSO_ens = ghENSO_ens/k;
 
-['shape of Model ensemble stpavg :: ']
-size(stp_ens)
+% ['shape of LRTM ensemble stpavg :: ']
+% size(stp_ens)
+% 
+% 
+% ['shape of Model ensemble stpavg :: ']
+% size(ghENSO_ens)
+
+%% Spatial correlation between stpavg and ghano_ENSO(ERA)
+lt = find(latR<=-20);
+lat = latR(lt); lon = lonR;
+lrtm_ens = stp_ens(:,lt);
+modl_ens = ghENSO_ens(:, lt);
 
 
-['shape of Model ensemble stpavg :: ']
-size(ghENSO_ens)
+% %%%%%%%%%% AREA WEIGHTED correlation %%%%%%%%%%%%
+% % grid area
+[Xg,Yg] = meshgrid(lat, lon);
+A = cdtarea(Xg, Yg, 'km2');
 
+% normalization of area weights #1
+normA = A - min(A(:));
+normA = normA ./ max(normA(:));
 
+% 
+% % normalization of area weights #2
+% NormRows = sqrt(sum(A.*A,2));
+% normB = bsxfun(@rdivide,abs(A),NormRows);
+
+lrtm_ens = lrtm_ens.*normA;
+modl_ens = modl_ens.*normA;
+aera360 = aera360.*normA;
+
+whos lon lat lrtm* modl_ens aera360 normA
+
+rspat1 = nancorr2(lrtm_ens,aera360);
+rLRTM = [rLRTM; rspat1];
+rspat2 = nancorr2(modl_ens, aera360);
+rmod = [rmod; rspat2];
 %%
 % Plot STP ENS
 figure(1)
@@ -370,20 +414,10 @@ c(11:18,:) = [];
 colormap(c)
 colorbar
 title ('Expt - A')
-%% Spatial correlation between stpavg and ghano_ENSO(ERA)
-era = ghano_ENSO;
 
-% Removing NaN values in these metrices
-% as = find(isnan(stp_ens));
-% stp_ens(as) = []; ghENSO_ens(as) = []; era(as) = [];
+fnm = ['ExptA_CORR_SH_',trm,'.png'];
+print ('-r300', fnm, '-dpng')
 
-lt = find(latR<=-20);
-stp_ens = stp_ens(:,lt);
-era = era (:,lt);
-ghENSO_ens = ghENSO_ens(:,lt);
-
-rspat1 = nancorr2(stp_ens,era)
-rspat2 = nancorr2(ghENSO_ens, era)
-
-latR = latR(lt);
-% save('TEST_Spatial_corr_IRIS_ExptA', 'stp_ens', 'ghENSO_ens', 'era')
+[rmod rLRTM]
+fln = ['CORR_SH_ExptA_',trm,'.mat']
+save(fln, 'rmod', 'rLRTM')
