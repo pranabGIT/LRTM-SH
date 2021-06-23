@@ -58,7 +58,7 @@ from datetime import datetime
 cmippth = '/media/pranab/Backup Plus/Backup_12_05_2021/LRTM-SH-PD-ProcessedData'
 
 # CCSM4
-# flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_CCSM4_amip_19800101_20051231.npz'; modl = 'CCSM4_amip'; dy = 365.0; print ('Model chosen :: CCSM4')
+flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_CCSM4_amip_19800101_20051231.npz'; modl = 'CCSM4_amip'; dy = 365.0; print ('Model chosen :: CCSM4')
 
 #HadGEM2A
 # flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_HadGEM2A_amip_19800101_20051230.npz'; modl = 'HadGEM2A_amip'; dy = 360.0; print ('Model chosen :: HadGEM2A') 
@@ -69,10 +69,8 @@ cmippth = '/media/pranab/Backup Plus/Backup_12_05_2021/LRTM-SH-PD-ProcessedData'
 #IPSLcm5aMR
 # flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_IPSLcm5aMR_amip_19800101_20051231.npz'; modl = 'IPSLcm5aMR_amip'; dy = 365.0; print ('Model chosen :: IPSLcm5aMR')
 
-
 #GFDL-CM3
 # flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_GFDLCM3_amip_19800101_20051231.npz'; modl = 'GFDLCM3_amip'; dy = 365.0; print ('Model chosen :: GFDLCM3')
-
 
 #MPI-ESM-MR
 # flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_MPIesmMR_amip_19800101_20051231.npz'; modl = 'MPIesmMR_amip'; dy = 365.0; print ('Model chosen :: MPI-ESM-MR')
@@ -84,7 +82,7 @@ cmippth = '/media/pranab/Backup Plus/Backup_12_05_2021/LRTM-SH-PD-ProcessedData'
 # flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_MRI-CGCM3_amip_19800101_20051231.npz'; modl = 'MRI-CGCM3_amip'; dy = 365.0; print ('Model chosen :: MRI-CGCM3')
 
 #NorESM1
-flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_NorESM1_amip_19800101_20051231.npz'; modl = 'NorESM1_amip'; dy = 365.0; print ('Model chosen :: NorESM1')
+# flpr = cmippth + "/" + 'pr_ano_daily_detrend_NoFilt_NH_NorESM1_amip_19800101_20051231.npz'; modl = 'NorESM1_amip'; dy = 365.0; print ('Model chosen :: NorESM1')
 
 prfile = np.load(flpr)
 
@@ -134,9 +132,10 @@ for iy in range(len(yln)):
     
 # Step-2: extracts the composite DJF prec for ENSO extreme years #
 # El Nino years
-yr1 = [1982, 1987, 1991, 1997, 2002]; flo = 'ElNino'; # list for CMAP period
+# yr1 = [1982, 1987, 1991, 1997, 2002]; flo = 'ElNino'; # list for CMAP period
+
 # La Nina events
-# yr1 = [1988, 1995, 1998, 1999, 2000]; flo = 'LaNina'; # list for CMAP period
+yr1 = [1988, 1995, 1998, 1999, 2000]; flo = 'LaNina'; # list for CMAP period
 
 pdat = np.zeros((1, n, o))+99999.99
 for iyr in range(len(yr1)):
@@ -306,8 +305,8 @@ floutM = ('Proj_modlONcmap'+flo+'_frc_mat_lag'+str(ilag)+'_DJF_'+str(yr1)+'_'+st
 print (floutM)
 
 
-# import sys
-# sys.exit()
+#import sys
+#sys.exit()
 
 #np.savez(floutP, frc_mat=frc_mat)
 sio.savemat(floutM, {'frc_mat':frc_mat})

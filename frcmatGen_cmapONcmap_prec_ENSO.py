@@ -118,7 +118,7 @@ yln = np.array(yln)
  
 # selected extreme years
 # El Nino years
-yr1 = [1982, 1987, 1991, 1997, 2002] # list for CMAP period
+# yr1 = [1982, 1987, 1991, 1997, 2002] # list for CMAP period
 # La Nina events
 # yr1 = [1988, 1995, 1998, 1999, 2000]; # list for CMAP period
 
@@ -199,13 +199,15 @@ for ipl in range(3):
         m.drawmeridians(meridians,labels=[1,1,1,1],fontsize=7)
         m.drawcoastlines(color = 'gray', linewidth=0.5)
         
-figname = 'pfccVdaily_ensoONcmap.png'
-
+# figname = 'pfccVdaily_ensoONcmap.png'
 # plt.savefig(figname, dpi=400)
 
 
-import sys
-sys.exit()
+# figname = 'ensoONcmap_1988.png'
+# plt.savefig(figname, dpi=400)
+
+# import sys
+# sys.exit()
 ##################################################################
 # Extracting data for DJF+40 days lag
 pfcc=scipy.signal.detrend(pfcc, axis=0)
