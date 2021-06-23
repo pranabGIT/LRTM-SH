@@ -4,10 +4,10 @@
 %{
 % The code takes in:
 
-Expt-B
+Expt-C
 
 1. forcing data (DJF + 40 lag days) : projection of model ENSO prec anom on
-daily model prec anomaly
+daily cmap prec anomaly
 
 2. sigmal matrix (DJF all grid points over NH) : geopot. height anom @250
 hPa from observation (NCEP or ERA5)
@@ -74,9 +74,7 @@ elseif idc == 9
 end
 
 % Forcing data
-% fln = ['Proj_modl',trm,'_frc_mat_lag40_DJF_1980_2004_',modl,'_amip.mat'];
 fln = ['Proj_modlONcmap',trm,'_frc_mat_lag40_DJF_1980_2004_',modl,'_amip.mat'];
-
 load (fln)
         
 % ifl = input ('Which Reanalysis? -- (1) NCEP or (2) ERA5 :: ');
@@ -146,7 +144,6 @@ end
 stpavg = squeeze(nanmean(stp(itm1:itm2,:,:),1)); % given time lag range
 
 stpsv = ['stp_',modl, '_DJF_1980_2004_ExptC_',trm];
-
 save(stpsv, 'stpavg', 'lon', 'lat')
 %% Calculate Geostrophic wind
 % eta=stpavg';
@@ -242,6 +239,6 @@ colormap(c)
 title ([modl,' ',trm])
 
 %fnm = ['SRF_AVG_30_40_',trm,'_SH_',yrst,'.png'];
-fnm = ['ExptB_SRF_AVG_30_40_',trm,'_SH_',modl,'_',trm,'.png'];
+fnm = ['ExptC_SRF_AVG_30_40_',trm,'_SH_',modl,'_',trm,'.png'];
 print ('-r300', fnm, '-dpng')
 

@@ -12,7 +12,7 @@ subplot(2,1,1)
 bar([a b c d])
 ax=gca;
 ax.FontSize = 8;
-ylim([-0.1 0.7])
+ylim([-0.1 0.9])
 ylabel('Correlation')
 xticklabels(modl)
 xtickangle(45)
@@ -29,7 +29,7 @@ subplot(2,1,2)
 bar([a b c d])
 ax=gca;
 ax.FontSize = 8;
-ylim([-0.1 0.8])
+ylim([-0.1 0.9])
 ylabel('Correlation')
 xticklabels(modl)
 xtickangle(45)
